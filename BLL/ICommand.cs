@@ -9,7 +9,5 @@ namespace BLL
     public interface ICommand
     {
         void Ejecutar();
-
-        void Deshacer();
     }
 }

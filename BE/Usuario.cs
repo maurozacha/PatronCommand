@@ -18,7 +18,13 @@ namespace BE
 
         public int edad { get; set; }
 
-        public Subscipcion subscipcion { get; set; }
+        public Subscripcion subscripcion { get; set; }
 
+        public override string ToString()
+        {
+            string tipoSubscripcionNombre = subscripcion?.tipoSubscripcion?.ToString();
+            return $"{nomUsuario} - Suscripción: {tipoSubscripcionNombre}";
+
+        }
     }
 }

@@ -11,54 +11,64 @@ namespace BLL
     public class UsuarioBLL
     {
         UsuarioMapper usuarioMapper;
+ 
         public UsuarioBLL()
         {
             usuarioMapper = new UsuarioMapper();
         }
 
-        public void Suscribir(Usuario usuario, Subscipcion suscripcion)
+        public void Suscribir(Usuario usuario)
         {
-            if (usuario == null || suscripcion == null)
+            if (usuario == null)
             {
                 throw new ArgumentException("Usuario o suscripción no pueden ser nulos.");
             }
 
-            usuarioMapper.SuscribirUsuario(usuario, suscripcion);
+            usuarioMapper.AgregarUsuario(usuario);
         }
 
-        public void CancelarSuscripcion(Usuario usuario)
+        public void CancelarSuscripcion(Usuario usuario,Subscripcion subscripcion)
         {
             if (usuario == null)
             {
                 throw new ArgumentException("El usuario no puede ser nulo.");
             }
 
-            usuarioMapper.CancelarSuscripcion(usuario);
+            usuarioMapper.CancelarSuscripcion(usuario, subscripcion);
         }
 
-        public void Reproducir(Usuario usuario, Contenido contenido)
+        public List<Usuario> ObtenerUsuariosConSuscripciones()
         {
-            if (usuario == null || contenido == null)
-            {
-                throw new ArgumentException("Usuario o contenido no pueden ser nulos.");
-            }
-
-            // Aquí podríamos implementar lógica para validar la reproducción, como:
-            // - Verificar si el usuario tiene una suscripción activa.
-            // - Registrar la reproducción del contenido.
-
-            
+           return usuarioMapper.ObtenerUsuariosConSuscripciones();
         }
 
-        public static void DetenerReproduccion(Usuario usuario, Contenido contenido)
+        public Usuario ObtenerUsuarioPorNombre(string nomUsuario)
         {
-            if (usuario == null || contenido == null)
+            return usuarioMapper.ObtenerUsuarioPorNombre(nomUsuario);
+        }
+
+        public Subscripcion ObtenerSubscripcionPorTipo(string tipo)
+        {
+            return usuarioMapper.ObtenerSubscripcionPorTipo(tipo);
+        }
+
+        public void AgregarUsuarioConSubscripcion(Usuario usuario)
+        {
+            Subscripcion subscripcion = usuarioMapper.ObtenerSubscripcionPorTipo(usuario.subscripcion.tipoSubscripcion.nombre);
+
+            if (subscripcion == null)
             {
-                throw new ArgumentException("Usuario o contenido no pueden ser nulos.");
+                throw new Exception("No se pudo encontrar el tipo de suscripción.");
             }
 
-            // Aquí podríamos implementar lógica para detener la reproducción.
+            usuario.subscripcion.id = subscripcion.id;
 
+            usuarioMapper.AgregarUsuario(usuario);
+        }
+
+        public List<TipoSubscripcion> ObtenerTiposSubscripcion()
+        {
+            return usuarioMapper.ObtenerTiposSubscripcion();
         }
     }
 }

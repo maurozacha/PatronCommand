@@ -42,6 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CancelarSubscripcionUsuarioCommand.cs" />
+    <Compile Include="Invoker.cs" />
+    <Compile Include="Receiver.cs" />
     <Compile Include="SubscribirUsuarioCommand.cs" />
     <Compile Include="ICommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

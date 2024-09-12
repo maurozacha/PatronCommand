@@ -9,32 +9,16 @@ namespace BLL
 {
     public class SubscribirUsuarioCommand : ICommand
     {
-        private readonly Usuario usuario;
-        private readonly Subscipcion subscipcion;
-        UsuarioBLL usuarioBLL;
+        private readonly Receiver receiver;
 
-        public SubscribirUsuarioCommand()
+        public SubscribirUsuarioCommand(Receiver receiver)
         {
-            usuarioBLL = new UsuarioBLL();
-        }
-
-        public SubscribirUsuarioCommand(Usuario usuario, Subscipcion suscripcion)
-        {
-            this.usuario = usuario;
-            this.subscipcion = suscripcion;
+            this.receiver = receiver;
         }
 
         public void Ejecutar()
         {
-            // Llamar a la lógica de negocio para suscribir usuario
-            usuarioBLL.Suscribir(usuario, subscipcion);
-        }
-
-        public void Deshacer()
-        {
-            // Lógica para deshacer suscripción
-            usuarioBLL.CancelarSuscripcion(usuario);
-
+            receiver.SuscribirUsuario();
         }
     }
 }

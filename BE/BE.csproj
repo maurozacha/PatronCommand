@@ -41,8 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Contenido.cs" />
-    <Compile Include="Subscipcion.cs" />
+    <Compile Include="Subscripcion.cs" />
     <Compile Include="TipoSubscripcion.cs" />
     <Compile Include="Usuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

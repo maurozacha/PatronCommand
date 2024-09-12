@@ -19,7 +19,6 @@ namespace DAL
             conexion = new SqlConnection(cadenaConexion);
         }
 
-        // Método para ejecutar comandos (Stored Procedures) que no devuelven resultados (Ej: Suscribir, Cancelar Suscripción)
         public bool EjecutarComando(string consulta, Hashtable parametros)
         {
             try
@@ -53,7 +52,6 @@ namespace DAL
             }
         }
 
-        // Método para obtener datos de la base de datos (Ej: Obtener información de un usuario)
         public DataTable ObtenerDatos(string consulta, Hashtable parametros)
         {
             DataTable tabla = new DataTable();
@@ -87,7 +85,6 @@ namespace DAL
             return tabla;
         }
 
-        // Método para ejecutar comandos que devuelven un valor escalar (Ej: Obtener una respuesta simple, como una validación)
         public object EjecutarScalar(string consulta, Hashtable parametros)
         {
             try

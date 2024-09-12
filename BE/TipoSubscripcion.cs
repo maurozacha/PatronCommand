@@ -11,6 +11,9 @@ namespace BE
         public int id { get; set; }
         public string nombre { get; set; }
 
-        public List<Contenido> contenidos { get; set; }
+        public override string ToString()
+        {
+            return nombre;
+        }
     }
 }

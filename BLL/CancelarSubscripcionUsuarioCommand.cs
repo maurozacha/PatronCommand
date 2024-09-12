@@ -10,30 +10,17 @@ namespace BLL
     public class CancelarSubscripcionUsuarioCommand : ICommand
     {
 
-        private readonly Usuario usuario;
-        private readonly Subscipcion subscipcion;
-        UsuarioBLL usuarioBLL;
+        private readonly Receiver receiver;
 
-
-        public CancelarSubscripcionUsuarioCommand()
+        public CancelarSubscripcionUsuarioCommand(Receiver receiver)
         {
-
-            usuarioBLL = new UsuarioBLL();
+            this.receiver = receiver;
         }
 
-        public CancelarSubscripcionUsuarioCommand(Usuario usuario, Subscipcion subscipcion)
+        public void Ejecutar()
         {
-            this.usuario = usuario;
-            this.subscipcion = subscipcion;
+            receiver.CancelarSuscripcion();
         }
 
-        public void Ejecutar() {
-            usuarioBLL.CancelarSuscripcion(usuario);
-
-        }
-
-        public void Deshacer() {
-            usuarioBLL.Suscribir(usuario, subscipcion);
-        }
     }
 }
