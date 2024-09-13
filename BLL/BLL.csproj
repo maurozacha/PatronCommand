@@ -42,7 +42,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CancelarSubscripcionUsuarioCommand.cs" />
+    <Compile Include="CommandCompuesto.cs" />
     <Compile Include="Invoker.cs" />
+    <Compile Include="NotificarCancelacionSubscripcionCommand.cs" />
+    <Compile Include="NotificarYCancelarCommand.cs" />
     <Compile Include="Receiver.cs" />
     <Compile Include="SubscribirUsuarioCommand.cs" />
     <Compile Include="ICommand.cs" />

@@ -70,5 +70,11 @@ namespace BLL
         {
             return usuarioMapper.ObtenerTiposSubscripcion();
         }
+
+        public string NotificarUsuario(Usuario usuario)
+        {
+
+            return $"El usuario {usuario.nomUsuario} fue notificado de la cancelacion de la subscripcion al correo: {usuario.mail}";
+        }
     }
 }

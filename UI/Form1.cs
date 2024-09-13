@@ -52,13 +52,26 @@ namespace UI
             }
         }
 
+        private void clearValues()
+        {
+            tipoSubscripcionComboBox.SelectedItem = "";
+            edadNumericUpDown.Value = 0;
+            nomUsuarioTB.Text = "";
+            correoTB.Text = "";
+            nombreCompletoTB.Text = "";
+            UsuarioSubLB.Text = "";
+            label8.Visible = false;
+            SubsLB.Text = "";
+            label9.Visible = false;
+
+        }
+
         private void button3_Click(object sender, EventArgs e)
         {
 
             if (UsuarioSubscriptorLB.SelectedItem != null)
             {
                 string selectedItem = UsuarioSubscriptorLB.SelectedItem.ToString();
-
                 string[] parts = selectedItem.Split(new[] { " - " }, StringSplitOptions.None);
 
                 if (parts.Length == 2)
@@ -66,21 +79,28 @@ namespace UI
                     string usuarioNombre = parts[0];
                     string tipoSubscripcion = parts[1];
 
-                    Usuario usuario = usuarioBLL.ObtenerUsuarioPorNombre(usuarioNombre); 
-                    Subscripcion subscripcion = usuarioBLL.ObtenerSubscripcionPorTipo(tipoSubscripcion); 
+                    Usuario usuario = usuarioBLL.ObtenerUsuarioPorNombre(usuarioNombre);
+                    Subscripcion subscripcion = usuarioBLL.ObtenerSubscripcionPorTipo(tipoSubscripcion);
 
                     if (usuario != null && subscripcion != null)
                     {
                         Receiver receiver = new Receiver(usuario, subscripcion);
-
-                        ICommand command = new CancelarSubscripcionUsuarioCommand(receiver);
+                        ICommand comandoCompuesto = new NotificarYCancelarCommand(receiver);
 
                         Invoker invoker = new Invoker();
-                        invoker.SetCommand(command);
-
+                        invoker.SetCommand(comandoCompuesto);
                         invoker.ExecuteCommand();
-                        LlenarUsuarioSubscriptorLB();
 
+                        LlenarUsuarioSubscriptorLB();
+                        clearValues();
+
+                        string mensaje = (comandoCompuesto as NotificarYCancelarCommand)?.ObtenerMensajeNotificacion();
+                        if (!string.IsNullOrEmpty(mensaje))
+                        {
+                            MessageBox.Show(mensaje);
+                        }
+
+                       
                     }
                     else
                     {
@@ -106,49 +126,59 @@ namespace UI
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string tipoSubscripcion = tipoSubscripcionComboBox.SelectedItem.ToString();
-            int edad = (int)edadNumericUpDown.Value;
-            string nomUsuario = nomUsuarioTB.Text;
-            string correo = correoTB.Text;
-            string nombreCompleto = nombreCompletoTB.Text;
-
-            if (string.IsNullOrEmpty(nomUsuario) || string.IsNullOrEmpty(correo) || string.IsNullOrEmpty(nombreCompleto) || string.IsNullOrEmpty(tipoSubscripcion))
-            {
-                MessageBox.Show("Por favor, complete todos los campos.");
-                return;
-            }
-
-            Usuario nuevoUsuario = new Usuario
-            {
-                nombre = nombreCompleto,
-                nomUsuario = nomUsuario,
-                mail = correo,
-                edad = edad,
-                subscripcion = new Subscripcion
-                {
-                    tipoSubscripcion = new TipoSubscripcion { nombre = tipoSubscripcion },
-                    activa = true 
-                }
-            };
-
-            Receiver receiver = new Receiver(nuevoUsuario, nuevoUsuario.subscripcion);
-
-            ICommand command = new SubscribirUsuarioCommand(receiver);
-
-            Invoker invoker = new Invoker();
-            invoker.SetCommand(command);
-
             try
             {
-                invoker.ExecuteCommand();
-                MessageBox.Show("Usuario registrado con éxito.");
+                string tipoSubscripcion = tipoSubscripcionComboBox.SelectedItem.ToString();
+                int edad = (int)edadNumericUpDown.Value;
+                string nomUsuario = nomUsuarioTB.Text;
+                string correo = correoTB.Text;
+                string nombreCompleto = nombreCompletoTB.Text;
 
-                LlenarUsuarioSubscriptorLB();
+                if (string.IsNullOrEmpty(nomUsuario) || string.IsNullOrEmpty(correo) || string.IsNullOrEmpty(nombreCompleto) || string.IsNullOrEmpty(tipoSubscripcion))
+                {
+                    MessageBox.Show("Por favor, complete todos los campos.");
+                    return;
+                }
+
+                Usuario nuevoUsuario = new Usuario
+                {
+                    nombre = nombreCompleto,
+                    nomUsuario = nomUsuario,
+                    mail = correo,
+                    edad = edad,
+                    subscripcion = new Subscripcion
+                    {
+                        tipoSubscripcion = new TipoSubscripcion { nombre = tipoSubscripcion },
+                        activa = true
+                    }
+                };
+
+                Receiver receiver = new Receiver(nuevoUsuario, nuevoUsuario.subscripcion);
+
+                ICommand command = new SubscribirUsuarioCommand(receiver);
+
+                Invoker invoker = new Invoker();
+                invoker.SetCommand(command);
+
+                try
+                {
+                    invoker.ExecuteCommand();
+                    MessageBox.Show("Usuario registrado con éxito.");
+
+                    LlenarUsuarioSubscriptorLB();
+                    clearValues();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error al registrar el usuario: {ex.Message}");
+                }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                MessageBox.Show($"Error al registrar el usuario: {ex.Message}");
+
+                    MessageBox.Show("No se agregaron campos");
             }
+            
         }
 
         private void UsuarioSubscriptorLB_SelectedIndexChanged(object sender, EventArgs e)

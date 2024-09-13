@@ -29,5 +29,10 @@ namespace BLL
         {
             usuarioBLL.Suscribir(usuario);
         }
+
+        public string NotificarUsuario()
+        {
+            return usuarioBLL.NotificarUsuario(usuario);
+        }
     }
 }
